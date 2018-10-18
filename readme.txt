@@ -3,7 +3,7 @@
 Contributors: Adrian Toro
 Plugin Name: WP Better Submenus 
 Plugin URI: http://adriantoro.infoeplus.com/wordpress/plugins/better-sub-menus/
-Tags: nav menu, menu, menus, menues, admin menu
+Tags: nav menu, menu, menues
 Author URI: http://adriantoro.infoeplus.com/
 Author: Adrian Toro
 Requires at least: 4.0
