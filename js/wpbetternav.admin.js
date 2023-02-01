@@ -10,19 +10,12 @@
 			// For each menu, add the expand bar:
 			add_expand_bar();
 			
-			$('.submit-add-to-menu').on('click', function(){
-				
-				console.log('submit new menu item');
-				add_expand_bar();
-			
-			});
-			
 			// Monitor changes on menu items:
 			setInterval(function(){
 				
 					add_expand_bar();
 				
-			},2000);
+			},1000);
 			
 			
 			// When clicking on a expand bar, expand the menu or if the menu was already expanded, then hide the submenus.
@@ -36,18 +29,33 @@
 				
 				//console.log( 'This element depth: ' + depth );
 				//console.log( 'Children elements depth: ' + childrenDepth );
+				
+				var notClasses = '';
+				for (var i = 0; i < depth; i++) {
+					if (i !== depth - 1) {
+						notClasses += `.menu-item-depth-${i}, `;
+					} else {
+						notClasses += `.menu-item-depth-${i}`;
+					}
+				}
+				
 
 				if ( $(this).hasClass('expanded')  ){
-					menuitem.nextUntil('.menu-item-depth-'+depth, '.menu-item-depth-'+childrenDepth ).removeClass('hide').find('.item-expand').removeClass('expanded');
-					
-					// Toggle arrow icon:
+					menuitem
+						.nextUntil('.menu-item-depth-'+depth, '.menu-item-depth-'+childrenDepth )
+						.not('.menu-item-depth-' + depth)
+						.not(notClasses)
+						.removeClass('hide')
+						.find('.item-expand')
 					$(this).removeClass('expanded');
-					
 				}else{
-					menuitem.nextUntil('.menu-item-depth-'+depth, '.menu-item' ).addClass('hide');
-					
-					// Toggle arrow icon:
+					menuitem
+						.nextUntil('.menu-item-depth-' + depth, '.menu-item')
+						.not('.menu-item-depth-' + depth)
+						.not(notClasses)
+						.addClass('hide');
 					$(this).addClass('expanded');
+
 				}
 					
 			});
@@ -67,13 +75,14 @@
 				//console.log( 'This element depth: ' + depth );
 				//console.log( 'Children elements depth: ' + childrenDepth );
 				
-				if ( 
-					$(this).next('.menu-item-depth-'+childrenDepth ).length &&
-					$(this).find('.item-expand').length == 0   
-				){
-				
-					$(this).find('.item-title').before('<a class="item-expand"></a>');
-			
+				if ( $(this).next('.menu-item-depth-'+childrenDepth ).length ){
+					
+					if ( $(this).find('.item-expand').length == 0 ){
+						$(this).find('.item-title').before('<a class="item-expand"></a>');
+					}
+					
+				}else{
+						$(this).find('.item-expand').remove();
 				}
 					
 			});

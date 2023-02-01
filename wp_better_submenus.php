@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WP Better Sub Menus
  * Description: A better way to display the nav menus in your admin area 
- * Version: 1.0.4
+ * Version: 1.0.5
  * Author: Adrian Toro 
  * Domain Path: /languages
  * Text Domain: wp-better-nav
@@ -25,7 +25,7 @@ class WPBetterNavMenu {
 			
 			wp_enqueue_style( 'wpbetternav.style.admin', plugins_url( '/css/wpbetternav.admin.css' , __FILE__ ), array(), '181016v05' );
 
-			wp_enqueue_script( 'wpbetternav.script.admin', plugins_url( '/js/wpbetternav.admin.js' , __FILE__ ), array( 'jquery' ), '230131v01', true );
+			wp_enqueue_script( 'wpbetternav.script.admin', plugins_url( '/js/wpbetternav.admin.js' , __FILE__ ), array( 'jquery' ), '230201v02', true );
 		}
 	}
 }
