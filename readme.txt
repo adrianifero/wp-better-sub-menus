@@ -8,8 +8,8 @@ Author URI: http://adriantoro.infoeplus.com/
 Author: Adrian Toro
 Requires at least: 4.0
 Tested up to: 4.9.8
-Stable tag: 1.0
-Version: 1.0 
+Stable tag: 1.0.3
+Version: 1.0.3
 
 == Description ==
 

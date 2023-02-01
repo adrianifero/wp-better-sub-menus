@@ -33,6 +33,7 @@ body.nav-menus-php #menu-settings-column form#nav-menu-meta #side-sortables > ul
 	margin-bottom: 100px;
 }
 
+/* default styling */
 body.nav-menus-php a.item-expand {
 	position: absolute;
     left: 0;
@@ -44,6 +45,19 @@ body.nav-menus-php a.item-expand {
     cursor: pointer;
     border-left: 5px solid #e0bd96;
 }
+
+/* Gradient menu items color: */
+body.nav-menus-php .menu-item-depth-0 a.item-expand { border-color: #2A4858; }
+body.nav-menus-php .menu-item-depth-1 a.item-expand { border-color: #2a4858; }
+body.nav-menus-php .menu-item-depth-2 a.item-expand { border-color: #215d6e; }
+body.nav-menus-php .menu-item-depth-3 a.item-expand { border-color: #08737f; }
+body.nav-menus-php .menu-item-depth-4 a.item-expand { border-color: #00898a; }
+body.nav-menus-php .menu-item-depth-5 a.item-expand { border-color: #089f8f; }
+body.nav-menus-php .menu-item-depth-6 a.item-expand { border-color: #39b48e; }
+body.nav-menus-php .menu-item-depth-7 a.item-expand { border-color: #64c987; }
+body.nav-menus-php .menu-item-depth-8 a.item-expand { border-color: #92dc7e; }
+body.nav-menus-php .menu-item-depth-9 a.item-expand { border-color: #c4ec74; }
+body.nav-menus-php .menu-item-depth-10 a.item-expand { border-color: #fafa6e; }
 
 body.nav-menus-php a.item-expand.expanded {
 	border-left: 5px solid #947a5b;
