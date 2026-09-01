@@ -21,5 +21,16 @@ cp js/wpbetternav.admin.js "${STAGE}/${SLUG}/js/"
 )
 
 rm -rf "$STAGE"
+
+if ! unzip -p "$OUT" "${SLUG}/css/wpbetternav.admin.css" | grep -q 'border-left: 12px'; then
+	echo "ERROR: zip CSS does not contain the 1.1.0 expand bar styles" >&2
+	exit 1
+fi
+
+if ! unzip -p "$OUT" "${SLUG}/js/wpbetternav.admin.js" | grep -q 'wp-bsm-branch-open'; then
+	echo "ERROR: zip JS does not contain the 1.1.0 branch animation code" >&2
+	exit 1
+fi
+
 echo "Wrote $OUT"
 unzip -l "$OUT" | head -20

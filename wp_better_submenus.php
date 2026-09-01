@@ -50,6 +50,11 @@ final class WP_Better_Sub_Menus {
 			self::VERSION
 		);
 
+		wp_add_inline_style(
+			'wp-better-sub-menus-admin',
+			'body.nav-menus-php button.item-expand{border-left-width:12px!important;width:58px!important;border-radius:0 4px 4px 0!important;}'
+		);
+
 		wp_enqueue_script(
 			'wp-better-sub-menus-admin',
 			plugins_url( 'js/wpbetternav.admin.js', __FILE__ ),
