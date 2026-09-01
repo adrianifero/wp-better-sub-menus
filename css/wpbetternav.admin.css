@@ -1,64 +1,71 @@
 body.nav-menus-php .menu-item-bar .menu-item-handle {
-    min-height: 35px;
+	min-height: 35px;
+	position: relative;
 }
+
 body.nav-menus-php .menu-item.hide {
 	display: none !important;
 }
 
-
 body.nav-menus-php #menu-settings-column {
-    position: -webkit-sticky;
-    position: sticky;
-    height: 90vh;
-    top: 50px;	
+	position: -webkit-sticky;
+	position: sticky;
+	height: 90vh;
+	top: 50px;
 }
+
 body.nav-menus-php #menu-settings-column form#nav-menu-meta {
 	overflow: auto;
-    max-height: 90vh;
+	max-height: 90vh;
 }
+
 body.nav-menus-php #menu-settings-column form#nav-menu-meta:after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 115px;
-    background: -webkit-linear-gradient( rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100% );
-    background-image: -moz-linear-gradient( rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100% );
-    background-image: -o-linear-gradient( rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100% );
-    background-image: linear-gradient( rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100% );
-    background-image: -ms-linear-gradient( rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100% );
+	content: '';
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: 115px;
+	background: linear-gradient( rgba( 255, 255, 255, 0 ) 0%, rgba( 255, 255, 255, 1 ) 100% );
 }
 
 body.nav-menus-php #menu-settings-column form#nav-menu-meta #side-sortables > ul > li.accordion-section:last-child {
 	margin-bottom: 100px;
 }
 
-/* default styling */
-body.nav-menus-php a.item-expand {
+body.nav-menus-php button.item-expand {
 	position: absolute;
-    left: 0;
-    top: 0;
-    display: block;
-    width: 50px;
-    height: 100px;
-    outline: 0;
-    cursor: pointer;
-    border-left: 5px solid #e0bd96;
+	left: 0;
+	top: 0;
+	display: block;
+	width: 50px;
+	height: 100%;
+	min-height: 35px;
+	padding: 0;
+	margin: 0;
+	border: 0;
+	border-left: 5px solid #e0bd96;
+	background: transparent;
+	cursor: pointer;
+	z-index: 2;
 }
 
-/* Gradient menu items color: */
-body.nav-menus-php .menu-item-depth-0 a.item-expand { border-color: #2A4858; }
-body.nav-menus-php .menu-item-depth-1 a.item-expand { border-color: #2a4858; }
-body.nav-menus-php .menu-item-depth-2 a.item-expand { border-color: #215d6e; }
-body.nav-menus-php .menu-item-depth-3 a.item-expand { border-color: #08737f; }
-body.nav-menus-php .menu-item-depth-4 a.item-expand { border-color: #00898a; }
-body.nav-menus-php .menu-item-depth-5 a.item-expand { border-color: #089f8f; }
-body.nav-menus-php .menu-item-depth-6 a.item-expand { border-color: #39b48e; }
-body.nav-menus-php .menu-item-depth-7 a.item-expand { border-color: #64c987; }
-body.nav-menus-php .menu-item-depth-8 a.item-expand { border-color: #92dc7e; }
-body.nav-menus-php .menu-item-depth-9 a.item-expand { border-color: #c4ec74; }
-body.nav-menus-php .menu-item-depth-10 a.item-expand { border-color: #fafa6e; }
+body.nav-menus-php button.item-expand:focus {
+	outline: 2px solid #2271b1;
+	outline-offset: -2px;
+}
 
-body.nav-menus-php a.item-expand.expanded {
-	
+body.nav-menus-php .menu-item-depth-0 button.item-expand { border-color: #2a4858; }
+body.nav-menus-php .menu-item-depth-1 button.item-expand { border-color: #2a4858; }
+body.nav-menus-php .menu-item-depth-2 button.item-expand { border-color: #215d6e; }
+body.nav-menus-php .menu-item-depth-3 button.item-expand { border-color: #08737f; }
+body.nav-menus-php .menu-item-depth-4 button.item-expand { border-color: #00898a; }
+body.nav-menus-php .menu-item-depth-5 button.item-expand { border-color: #089f8f; }
+body.nav-menus-php .menu-item-depth-6 button.item-expand { border-color: #39b48e; }
+body.nav-menus-php .menu-item-depth-7 button.item-expand { border-color: #64c987; }
+body.nav-menus-php .menu-item-depth-8 button.item-expand { border-color: #92dc7e; }
+body.nav-menus-php .menu-item-depth-9 button.item-expand { border-color: #c4ec74; }
+body.nav-menus-php .menu-item-depth-10 button.item-expand { border-color: #fafa6e; }
+
+body.nav-menus-php button.item-expand.is-collapsed {
+	opacity: 0.85;
 }

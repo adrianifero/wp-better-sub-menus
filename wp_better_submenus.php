@@ -1,33 +1,72 @@
-<?php 
+<?php
 /**
  * Plugin Name: WP Better Sub Menus
- * Description: A better way to display the nav menus in your admin area 
- * Version: 1.0.5
- * Author: Adrian Toro 
- * Domain Path: /languages
+ * Plugin URI:  https://wordpress.org/plugins/wp-better-sub-menus/
+ * Description: Collapse and expand nested items on Appearance → Menus so large menus stay easy to edit.
+ * Version:     1.1.0
+ * Author:      Adrian Toro
+ * Author URI:  https://adriantoro.com
  * Text Domain: wp-better-nav
+ * Domain Path: /languages
+ * Requires at least: 6.0
+ * Requires PHP: 7.4
+ * Tested up to: 7.1
+ * License:     GPLv2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ */
 
-**/
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
-class WPBetterNavMenu {
-		
+/**
+ * Admin UX improvements for the nav menus screen.
+ */
+final class WP_Better_Sub_Menus {
+
+	const VERSION = '1.1.0';
+
+	/**
+	 * Bootstrap hooks.
+	 */
 	public function __construct() {
-		
-		
-		// Scripts:
-		add_action( 'admin_enqueue_scripts', array($this, 'enqueue_scripts_admin') );
-		
-		
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_assets' ) );
 	}
-	public static function enqueue_scripts_admin( $hook_suffix ) {
-		
-		if ( $hook_suffix === 'nav-menus.php' ){
-			
-			wp_enqueue_style( 'wpbetternav.style.admin', plugins_url( '/css/wpbetternav.admin.css' , __FILE__ ), array(), '181016v05' );
 
-			wp_enqueue_script( 'wpbetternav.script.admin', plugins_url( '/js/wpbetternav.admin.js' , __FILE__ ), array( 'jquery' ), '230201v02', true );
+	/**
+	 * Load CSS/JS only on Appearance → Menus.
+	 *
+	 * @param string $hook_suffix Current admin page hook.
+	 */
+	public function enqueue_admin_assets( $hook_suffix ) {
+		if ( 'nav-menus.php' !== $hook_suffix ) {
+			return;
 		}
+
+		wp_enqueue_style(
+			'wp-better-sub-menus-admin',
+			plugins_url( 'css/wpbetternav.admin.css', __FILE__ ),
+			array(),
+			self::VERSION
+		);
+
+		wp_enqueue_script(
+			'wp-better-sub-menus-admin',
+			plugins_url( 'js/wpbetternav.admin.js', __FILE__ ),
+			array( 'jquery' ),
+			self::VERSION,
+			true
+		);
+
+		wp_localize_script(
+			'wp-better-sub-menus-admin',
+			'wpBetterSubMenus',
+			array(
+				'collapseLabel' => __( 'Collapse submenu', 'wp-better-nav' ),
+				'expandLabel'   => __( 'Expand submenu', 'wp-better-nav' ),
+			)
+		);
 	}
 }
 
-$WPBetterNavMenu = new WPBetterNavMenu();
+new WP_Better_Sub_Menus();

@@ -1,60 +1,78 @@
-=== Plugin Name ===
-
+=== WP Better Sub Menus ===
 Contributors: adrianifero
-Plugin Name: WP Better Submenus 
-Plugin URI: http://adriantoro.infoeplus.com/wordpress/plugins/better-sub-menus/
-Tags: nav menu, menu, menues
-Author URI: http://adriantoro.infoeplus.com/
-Author: Adrian Toro
+Tags: nav menu, menu, admin, navigation, menus
 Requires at least: 6.0
-Tested up to: 6.1.1
-Stable tag: 1.0.5
-Version: 1.0.5
+Tested up to: 7.1
+Stable tag: 1.1.0
+Requires PHP: 7.4
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+
+Collapse and expand nested menu items on Appearance → Menus. Built for sites with long, deep menus.
 
 == Description ==
 
-WP Better Sub Menus improves the menu admin screen (nav-menus.php) by allowing you to Expand/Contract the menu items.  Specially useful when your menu consist of a few dozens of items.
+WP Better Sub Menus improves the **Appearance → Menus** screen when you manage large nested menus.
 
-Other features include:
+* Click the colored bar on a parent item to collapse or expand its branch
+* Sticky, scrollable left column (Pages, Posts, categories, etc.) while you edit
+* Depth colors so nested levels are easier to scan
+* Visual changes only — front-end navigation is unchanged
 
-- Sticky sidebar for easier access to the links sidebar menu
-- Scrollable sidebar.
-- Colored menu items to indicate if a menu item has subitems inside
-- Easy click & expand or click & contract.
+Especially useful when a menu has dozens of items and several levels deep.
 
 == Installation ==
 
-Upload the plugin to your blog, activate it and go to Appearance / Menus. You'll see that now your menus are nested and contracted.  Note: If you don't have any submenus or nested menus, you'll not going to notice any changes.
+1. Install from Plugins → Add New (search “WP Better Sub Menus”), or upload a zip whose top-level folder is `wp-better-sub-menus`.
+2. Activate the plugin.
+3. Go to **Appearance → Menus**. Parent items with children show a colored expand control on the left.
 
-This plugin introduces only visual changes, your navigation functionality remains the same.
-
-== Upgrade Notice ==
-
-== Screenshots ==
-
-1. *Before*: Sometimes you have so many items that it gets almost impossible to navigate.
-2. *After*: The plugin contracts the items containing subitems plus making your sidebar sticky and scrollable
-3. *Easy Click & Contract*: Just click the color bar for a menu item and it contracts to let you see the items below.
-
-== Changelog ==
-
-= 1.0.5 =
-* 10 leves of menu items, with gradient color to better identify each of them
-* All items are collapsible, even the ones just drag and dropped, when editing a menu
-
-= 1.0.4 =
-* 10 levels of menu items, with gradient color to better identify each of them
-* All items are collapsible, even the ones just drag and dropped, when editing a menu
-
-= 1.0.3 =
-* Screenshots & Description added
-
-= 1.0.2 =
-* Color bars & Stick menu features added
-
+If your menu has no sub-items, the screen looks the same as before.
 
 == Frequently Asked Questions ==
 
+= Does this change my site menu on the front end? =
 
+No. It only improves the admin menu editor.
 
-== Donations ==
+= Why do I not see any difference? =
+
+The plugin adds controls when menu items have child items. Flat menus look unchanged.
+
+= Does it work with deep menus? =
+
+Yes. Collapse/expand supports nested depths beyond ten levels.
+
+== Screenshots ==
+
+1. Before: a long menu is hard to scan.
+2. After: branches collapse; the left panel stays sticky and scrollable.
+3. Click the colored bar to collapse or expand a branch.
+
+== Changelog ==
+
+= 1.1.0 =
+* Verified for WordPress 6.x and 7.x; Tested up to 7.1.
+* Replace polling with MutationObserver when menu items change (drag-and-drop, add, delete).
+* Fix depth detection for menus deeper than nine levels.
+* Expand/collapse uses the colored bar only — no longer hijacks the whole row click.
+* Accessible toggle button with aria-expanded.
+
+= 1.0.5 =
+* Ten levels of menu items with gradient colors.
+* All items collapsible, including items just drag-and-dropped while editing.
+
+= 1.0.4 =
+* Ten levels of menu items with gradient colors.
+* All items collapsible, including items just drag-and-dropped while editing.
+
+= 1.0.3 =
+* Screenshots and description added.
+
+= 1.0.2 =
+* Color bars and sticky menu features added.
+
+== Upgrade Notice ==
+
+= 1.1.0 =
+Reliable on current WordPress. Safer expand control and better behavior after drag-and-drop. Recommended update from 1.0.5.

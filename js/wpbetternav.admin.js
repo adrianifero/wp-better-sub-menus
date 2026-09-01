@@ -1,93 +1,133 @@
-(function( $ ) {
-    "use strict";
-	$(function() {
-		
-		if ( $('.item-edit').length > 0 ) {
-			
-			// Hide all submenues on load:
-			//$('.menu-item:not(.menu-item-depth-0)').addClass('hide');
-			
-			// For each menu, add the expand bar:
-			add_expand_bar();
-			
-			// Monitor changes on menu items:
-			setInterval(function(){
-				
-					add_expand_bar();
-				
-			},1000);
-			
-			
-			// When clicking on a expand bar, expand the menu or if the menu was already expanded, then hide the submenus.
-			$(document).on('click', '.menu-item-handle', function(){
-				
-				
-				var menuitem = $(this).parents('.menu-item');
-				
-				var depth = parseInt( menuitem.attr('class').split("menu-item-depth-")[1].substr(0, 1) );
-				var childrenDepth = depth + 1;
-				
-				//console.log( 'This element depth: ' + depth );
-				//console.log( 'Children elements depth: ' + childrenDepth );
-				
-				var notClasses = '';
-				for (var i = 0; i < depth; i++) {
-					if (i !== depth - 1) {
-						notClasses += `.menu-item-depth-${i}, `;
-					} else {
-						notClasses += `.menu-item-depth-${i}`;
-					}
-				}
-				
+( function ( $ ) {
+	'use strict';
 
-				if ( $(this).hasClass('expanded')  ){
-					menuitem
-						.nextUntil('.menu-item-depth-'+depth, '.menu-item-depth-'+childrenDepth )
-						.not('.menu-item-depth-' + depth)
-						.not(notClasses)
-						.removeClass('hide')
-						.find('.item-expand')
-					$(this).removeClass('expanded');
-				}else{
-					menuitem
-						.nextUntil('.menu-item-depth-' + depth, '.menu-item')
-						.not('.menu-item-depth-' + depth)
-						.not(notClasses)
-						.addClass('hide');
-					$(this).addClass('expanded');
+	var MENU_LIST_ID = 'menu-to-edit';
 
-				}
-					
-			});
-			
+	function menuItemDepth( $item ) {
+		var classes = $item.attr( 'class' ) || '';
+		var match   = classes.match( /menu-item-depth-(\d+)/ );
+		return match ? parseInt( match[1], 10 ) : 0;
+	}
+
+	function descendantSelector( depth ) {
+		var parts = [];
+		for ( var i = depth + 1; i <= 99; i++ ) {
+			parts.push( '.menu-item-depth-' + i );
 		}
-		
-		
-		function add_expand_bar(){
-			
-			$('.menu-item').each(function(){
-				
-				var menuitem = $(this);
-				
-				var depth = parseInt( menuitem.attr('class').split("menu-item-depth-")[1].substr(0, 1) );
-				var childrenDepth = depth + 1;
-				
-				//console.log( 'This element depth: ' + depth );
-				//console.log( 'Children elements depth: ' + childrenDepth );
-				
-				if ( $(this).next('.menu-item-depth-'+childrenDepth ).length ){
-					
-					if ( $(this).find('.item-expand').length == 0 ){
-						$(this).find('.item-title').before('<a class="item-expand"></a>');
-					}
-					
-				}else{
-						$(this).find('.item-expand').remove();
-				}
-					
-			});
-			
+		return parts.join( ', ' );
+	}
+
+	function directChildSelector( depth ) {
+		return '.menu-item-depth-' + ( depth + 1 );
+	}
+
+	function hideDescendants( $item ) {
+		var depth = menuItemDepth( $item );
+		$item
+			.nextUntil( '.menu-item-depth-' + depth, descendantSelector( depth ) )
+			.addClass( 'hide' );
+	}
+
+	function showDirectChildren( $item ) {
+		var depth = menuItemDepth( $item );
+		$item
+			.nextUntil( '.menu-item-depth-' + depth, directChildSelector( depth ) )
+			.removeClass( 'hide' );
+	}
+
+	function syncExpandControls() {
+		var collapseLabel =
+			window.wpBetterSubMenus && window.wpBetterSubMenus.collapseLabel
+				? window.wpBetterSubMenus.collapseLabel
+				: 'Collapse submenu';
+		var expandLabel =
+			window.wpBetterSubMenus && window.wpBetterSubMenus.expandLabel
+				? window.wpBetterSubMenus.expandLabel
+				: 'Expand submenu';
+
+		$( '#menu-to-edit .menu-item' ).each( function () {
+			var $item  = $( this );
+			var depth  = menuItemDepth( $item );
+			var $toggle = $item.find( '.item-expand' );
+			var hasChild = $item.next( directChildSelector( depth ) ).length > 0;
+
+			if ( ! hasChild ) {
+				$toggle.remove();
+				return;
+			}
+
+			if ( ! $toggle.length ) {
+				$item.find( '.item-title' ).before(
+					'<button type="button" class="item-expand" aria-expanded="true" aria-label="' +
+						collapseLabel +
+						'"></button>'
+				);
+				return;
+			}
+
+			var collapsed = $toggle.hasClass( 'is-collapsed' );
+			$toggle
+				.attr( 'aria-expanded', collapsed ? 'false' : 'true' )
+				.attr( 'aria-label', collapsed ? expandLabel : collapseLabel );
+		} );
+	}
+
+	function bindExpandClicks() {
+		$( document ).on( 'click', '.item-expand', function ( event ) {
+			event.preventDefault();
+			event.stopPropagation();
+
+			var $toggle = $( this );
+			var $item   = $toggle.closest( '.menu-item' );
+
+			if ( $toggle.hasClass( 'is-collapsed' ) ) {
+				showDirectChildren( $item );
+				$toggle.removeClass( 'is-collapsed' ).attr( 'aria-expanded', 'true' );
+			} else {
+				hideDescendants( $item );
+				$toggle.addClass( 'is-collapsed' ).attr( 'aria-expanded', 'false' );
+			}
+
+			var collapseLabel =
+				window.wpBetterSubMenus && window.wpBetterSubMenus.collapseLabel
+					? window.wpBetterSubMenus.collapseLabel
+					: 'Collapse submenu';
+			var expandLabel =
+				window.wpBetterSubMenus && window.wpBetterSubMenus.expandLabel
+					? window.wpBetterSubMenus.expandLabel
+					: 'Expand submenu';
+			$toggle.attr( 'aria-label', $toggle.hasClass( 'is-collapsed' ) ? expandLabel : collapseLabel );
+		} );
+	}
+
+	function watchMenuList() {
+		var list = document.getElementById( MENU_LIST_ID );
+		if ( ! list || typeof MutationObserver === 'undefined' ) {
+			return;
 		}
-	
-	});
-}(jQuery));
+
+		var pending = false;
+		var observer = new MutationObserver( function () {
+			if ( pending ) {
+				return;
+			}
+			pending = true;
+			window.requestAnimationFrame( function () {
+				syncExpandControls();
+				pending = false;
+			} );
+		} );
+
+		observer.observe( list, { childList: true, subtree: true } );
+	}
+
+	$( function () {
+		if ( ! $( '#menu-to-edit .menu-item' ).length ) {
+			return;
+		}
+
+		syncExpandControls();
+		bindExpandClicks();
+		watchMenuList();
+	} );
+}( jQuery ) );
