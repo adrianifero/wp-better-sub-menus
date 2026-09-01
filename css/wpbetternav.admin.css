@@ -7,8 +7,25 @@ body.nav-menus-php .menu-item.hide {
 	display: none !important;
 }
 
-body.nav-menus-php #menu-to-edit .menu-item {
+body.nav-menus-php #menu-to-edit .menu-item.wp-bsm-branch-anim {
 	overflow: hidden;
+}
+
+body.nav-menus-php #menu-to-edit .menu-item.wp-bsm-branch-open {
+	opacity: 1;
+}
+
+body.nav-menus-php #menu-to-edit .menu-item.wp-bsm-branch-closed {
+	opacity: 0;
+}
+
+body.nav-menus-php #menu-to-edit .menu-item.wp-bsm-branch-anim.wp-bsm-branch-open,
+body.nav-menus-php #menu-to-edit .menu-item.wp-bsm-branch-anim.wp-bsm-branch-closed {
+	transition:
+		max-height 0.35s ease,
+		opacity 0.3s ease,
+		margin 0.35s ease,
+		padding 0.35s ease;
 }
 
 body.nav-menus-php #menu-settings-column {
@@ -41,16 +58,25 @@ body.nav-menus-php button.item-expand {
 	left: 0;
 	top: 0;
 	display: block;
-	width: 50px;
+	width: 58px;
 	height: 100%;
 	min-height: 35px;
 	padding: 0;
 	margin: 0;
 	border: 0;
-	border-left: 5px solid #e0bd96;
+	border-left: 12px solid #e0bd96;
+	border-radius: 0 4px 4px 0;
 	background: transparent;
 	cursor: pointer;
 	z-index: 2;
+	box-shadow: inset 0 0 0 1px rgba( 0, 0, 0, 0.04 );
+	transition: border-left-width 0.15s ease, filter 0.15s ease;
+}
+
+body.nav-menus-php button.item-expand:hover,
+body.nav-menus-php button.item-expand:focus {
+	filter: brightness( 1.08 );
+	border-left-width: 14px;
 }
 
 body.nav-menus-php button.item-expand:focus {
@@ -71,5 +97,5 @@ body.nav-menus-php .menu-item-depth-9 button.item-expand { border-color: #c4ec74
 body.nav-menus-php .menu-item-depth-10 button.item-expand { border-color: #fafa6e; }
 
 body.nav-menus-php button.item-expand.is-collapsed {
-	opacity: 0.85;
+	opacity: 0.9;
 }

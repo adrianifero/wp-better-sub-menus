@@ -56,7 +56,8 @@ Yes. Collapse/expand supports nested depths beyond ten levels.
 * Replace polling with MutationObserver when menu items change (drag-and-drop, add, delete).
 * Fix depth detection for menus deeper than nine levels.
 * Expand/collapse uses the colored bar only — no longer hijacks the whole row click.
-* Smooth slide open/close when collapsing branches (respects reduced-motion preference).
+* Smooth slide open/close when collapsing branches (CSS transitions; respects reduced-motion preference).
+* Wider colored expand bar (12px) with hover emphasis for clearer visual affordance.
 * Accessible toggle button with aria-expanded.
 
 = 1.0.5 =

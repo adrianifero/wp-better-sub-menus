@@ -2,10 +2,12 @@
 	'use strict';
 
 	var MENU_LIST_ID = 'menu-to-edit';
-	var ANIMATION_MS  = window.matchMedia &&
-		window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches
-		? 0
-		: 220;
+	var BRANCH_OPEN   = 'wp-bsm-branch-open';
+	var BRANCH_CLOSED = 'wp-bsm-branch-closed';
+	var BRANCH_ANIM   = 'wp-bsm-branch-anim';
+	var prefersReducedMotion =
+		window.matchMedia &&
+		window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches;
 
 	function menuItemDepth( $item ) {
 		var classes = $item.attr( 'class' ) || '';
@@ -35,27 +37,71 @@
 		return $item.nextUntil( '.menu-item-depth-' + depth, directChildSelector( depth ) );
 	}
 
-	function hideDescendants( $item, callback ) {
-		var $all     = getDescendants( $item );
-		var $visible = $all.filter( ':visible' );
+	function prepareForAnimation( $items ) {
+		$items.each( function () {
+			var $el = $( this );
+			$el
+				.removeClass( 'hide ' + BRANCH_CLOSED )
+				.addClass( BRANCH_OPEN + ' ' + BRANCH_ANIM )
+				.css( 'max-height', $el.outerHeight() + 'px' );
+		} );
+	}
 
-		if ( ! $visible.length || ! ANIMATION_MS ) {
-			$all.addClass( 'hide' ).css( 'display', '' );
+	function afterTransition( $items, callback ) {
+		if ( ! $items.length ) {
 			if ( callback ) {
 				callback();
 			}
 			return;
 		}
 
-		var remaining = $visible.length;
-		$visible.stop( true, true ).slideUp( ANIMATION_MS, function () {
-			$( this ).addClass( 'hide' ).css( 'display', '' );
-			remaining -= 1;
-			if ( remaining === 0 ) {
-				$all.addClass( 'hide' );
-				if ( callback ) {
-					callback();
-				}
+		var done    = false;
+		var timeout = prefersReducedMotion ? 0 : 400;
+
+		function finish() {
+			if ( done ) {
+				return;
+			}
+			done = true;
+			if ( callback ) {
+				callback();
+			}
+		}
+
+		if ( prefersReducedMotion ) {
+			finish();
+			return;
+		}
+
+		$items.one( 'transitionend', finish );
+		window.setTimeout( finish, timeout );
+	}
+
+	function hideDescendants( $item, callback ) {
+		var $all = getDescendants( $item );
+
+		if ( prefersReducedMotion ) {
+			$all.addClass( 'hide' ).removeClass( BRANCH_OPEN + ' ' + BRANCH_CLOSED + ' ' + BRANCH_ANIM ).css( 'max-height', '' );
+			if ( callback ) {
+				callback();
+			}
+			return;
+		}
+
+		prepareForAnimation( $all.filter( ':visible' ) );
+		$all.filter( '.hide' ).addClass( BRANCH_CLOSED );
+
+		window.requestAnimationFrame( function () {
+			$all.removeClass( BRANCH_OPEN ).addClass( BRANCH_CLOSED ).css( 'max-height', '0px' );
+		} );
+
+		afterTransition( $all, function () {
+			$all
+				.addClass( 'hide' )
+				.removeClass( BRANCH_OPEN + ' ' + BRANCH_CLOSED + ' ' + BRANCH_ANIM )
+				.css( 'max-height', '' );
+			if ( callback ) {
+				callback();
 			}
 		} );
 	}
@@ -63,27 +109,29 @@
 	function showDirectChildren( $item, callback ) {
 		var $children = getDirectChildren( $item );
 
-		if ( ! $children.length ) {
+		if ( prefersReducedMotion ) {
+			$children.removeClass( 'hide ' + BRANCH_OPEN + ' ' + BRANCH_CLOSED + ' ' + BRANCH_ANIM ).css( 'max-height', '' );
 			if ( callback ) {
 				callback();
 			}
 			return;
 		}
 
-		if ( ! ANIMATION_MS ) {
-			$children.removeClass( 'hide' ).css( 'display', '' );
+		$children
+			.removeClass( 'hide ' + BRANCH_OPEN + ' ' + BRANCH_CLOSED )
+			.addClass( BRANCH_CLOSED + ' ' + BRANCH_ANIM )
+			.css( 'max-height', '0px' );
+
+		window.requestAnimationFrame( function () {
+			$children.each( function () {
+				var $el = $( this );
+				$el.removeClass( BRANCH_CLOSED ).addClass( BRANCH_OPEN ).css( 'max-height', $el.get( 0 ).scrollHeight + 'px' );
+			} );
+		} );
+
+		afterTransition( $children, function () {
+			$children.removeClass( BRANCH_OPEN + ' ' + BRANCH_CLOSED + ' ' + BRANCH_ANIM ).css( 'max-height', '' );
 			if ( callback ) {
-				callback();
-			}
-			return;
-		}
-
-		$children.removeClass( 'hide' ).css( 'display', 'none' );
-
-		var remaining = $children.length;
-		$children.stop( true, true ).slideDown( ANIMATION_MS, function () {
-			remaining -= 1;
-			if ( remaining === 0 && callback ) {
 				callback();
 			}
 		} );
@@ -100,9 +148,9 @@
 				: 'Expand submenu';
 
 		$( '#menu-to-edit .menu-item' ).each( function () {
-			var $item   = $( this );
-			var depth   = menuItemDepth( $item );
-			var $toggle = $item.find( '.item-expand' );
+			var $item    = $( this );
+			var depth    = menuItemDepth( $item );
+			var $toggle  = $item.find( '.item-expand' );
 			var hasChild = $item.next( directChildSelector( depth ) ).length > 0;
 
 			if ( ! hasChild ) {
