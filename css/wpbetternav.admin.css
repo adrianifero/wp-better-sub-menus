@@ -64,7 +64,7 @@ body.nav-menus-php button.item-expand {
 	padding: 0;
 	margin: 0;
 	border: 0;
-	border-left: 12px solid #e0bd96;
+	border-left: 8px solid #e0bd96;
 	border-radius: 0 4px 4px 0;
 	background: transparent;
 	cursor: pointer;
@@ -76,7 +76,7 @@ body.nav-menus-php button.item-expand {
 body.nav-menus-php button.item-expand:hover,
 body.nav-menus-php button.item-expand:focus {
 	filter: brightness( 1.08 );
-	border-left-width: 14px;
+	border-left-width: 10px;
 }
 
 body.nav-menus-php button.item-expand:focus {

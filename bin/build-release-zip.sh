@@ -22,7 +22,7 @@ cp js/wpbetternav.admin.js "${STAGE}/${SLUG}/js/"
 
 rm -rf "$STAGE"
 
-if ! unzip -p "$OUT" "${SLUG}/css/wpbetternav.admin.css" | grep -q 'border-left: 12px'; then
+if ! unzip -p "$OUT" "${SLUG}/css/wpbetternav.admin.css" | grep -q 'border-left: 8px'; then
 	echo "ERROR: zip CSS does not contain the 1.1.0 expand bar styles" >&2
 	exit 1
 fi

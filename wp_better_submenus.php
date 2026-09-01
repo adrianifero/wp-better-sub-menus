@@ -52,7 +52,7 @@ final class WP_Better_Sub_Menus {
 
 		wp_add_inline_style(
 			'wp-better-sub-menus-admin',
-			'body.nav-menus-php button.item-expand{border-left-width:12px!important;width:58px!important;border-radius:0 4px 4px 0!important;}'
+			'body.nav-menus-php button.item-expand{border-left-width:8px!important;width:58px!important;border-radius:0 4px 4px 0!important;}'
 		);
 
 		wp_enqueue_script(
