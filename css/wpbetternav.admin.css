@@ -7,6 +7,10 @@ body.nav-menus-php .menu-item.hide {
 	display: none !important;
 }
 
+body.nav-menus-php #menu-to-edit .menu-item {
+	overflow: hidden;
+}
+
 body.nav-menus-php #menu-settings-column {
 	position: -webkit-sticky;
 	position: sticky;

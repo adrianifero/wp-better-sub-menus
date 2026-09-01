@@ -2,6 +2,10 @@
 	'use strict';
 
 	var MENU_LIST_ID = 'menu-to-edit';
+	var ANIMATION_MS  = window.matchMedia &&
+		window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches
+		? 0
+		: 220;
 
 	function menuItemDepth( $item ) {
 		var classes = $item.attr( 'class' ) || '';
@@ -21,18 +25,68 @@
 		return '.menu-item-depth-' + ( depth + 1 );
 	}
 
-	function hideDescendants( $item ) {
+	function getDescendants( $item ) {
 		var depth = menuItemDepth( $item );
-		$item
-			.nextUntil( '.menu-item-depth-' + depth, descendantSelector( depth ) )
-			.addClass( 'hide' );
+		return $item.nextUntil( '.menu-item-depth-' + depth, descendantSelector( depth ) );
 	}
 
-	function showDirectChildren( $item ) {
+	function getDirectChildren( $item ) {
 		var depth = menuItemDepth( $item );
-		$item
-			.nextUntil( '.menu-item-depth-' + depth, directChildSelector( depth ) )
-			.removeClass( 'hide' );
+		return $item.nextUntil( '.menu-item-depth-' + depth, directChildSelector( depth ) );
+	}
+
+	function hideDescendants( $item, callback ) {
+		var $all     = getDescendants( $item );
+		var $visible = $all.filter( ':visible' );
+
+		if ( ! $visible.length || ! ANIMATION_MS ) {
+			$all.addClass( 'hide' ).css( 'display', '' );
+			if ( callback ) {
+				callback();
+			}
+			return;
+		}
+
+		var remaining = $visible.length;
+		$visible.stop( true, true ).slideUp( ANIMATION_MS, function () {
+			$( this ).addClass( 'hide' ).css( 'display', '' );
+			remaining -= 1;
+			if ( remaining === 0 ) {
+				$all.addClass( 'hide' );
+				if ( callback ) {
+					callback();
+				}
+			}
+		} );
+	}
+
+	function showDirectChildren( $item, callback ) {
+		var $children = getDirectChildren( $item );
+
+		if ( ! $children.length ) {
+			if ( callback ) {
+				callback();
+			}
+			return;
+		}
+
+		if ( ! ANIMATION_MS ) {
+			$children.removeClass( 'hide' ).css( 'display', '' );
+			if ( callback ) {
+				callback();
+			}
+			return;
+		}
+
+		$children.removeClass( 'hide' ).css( 'display', 'none' );
+
+		var remaining = $children.length;
+		$children.stop( true, true ).slideDown( ANIMATION_MS, function () {
+			remaining -= 1;
+			if ( remaining === 0 && callback ) {
+				callback();
+			}
+		} );
 	}
 
 	function syncExpandControls() {
@@ -46,8 +100,8 @@
 				: 'Expand submenu';
 
 		$( '#menu-to-edit .menu-item' ).each( function () {
-			var $item  = $( this );
-			var depth  = menuItemDepth( $item );
+			var $item   = $( this );
+			var depth   = menuItemDepth( $item );
 			var $toggle = $item.find( '.item-expand' );
 			var hasChild = $item.next( directChildSelector( depth ) ).length > 0;
 
@@ -78,16 +132,11 @@
 			event.stopPropagation();
 
 			var $toggle = $( this );
-			var $item   = $toggle.closest( '.menu-item' );
-
-			if ( $toggle.hasClass( 'is-collapsed' ) ) {
-				showDirectChildren( $item );
-				$toggle.removeClass( 'is-collapsed' ).attr( 'aria-expanded', 'true' );
-			} else {
-				hideDescendants( $item );
-				$toggle.addClass( 'is-collapsed' ).attr( 'aria-expanded', 'false' );
+			if ( $toggle.prop( 'disabled' ) ) {
+				return;
 			}
 
+			var $item = $toggle.closest( '.menu-item' );
 			var collapseLabel =
 				window.wpBetterSubMenus && window.wpBetterSubMenus.collapseLabel
 					? window.wpBetterSubMenus.collapseLabel
@@ -96,7 +145,26 @@
 				window.wpBetterSubMenus && window.wpBetterSubMenus.expandLabel
 					? window.wpBetterSubMenus.expandLabel
 					: 'Expand submenu';
-			$toggle.attr( 'aria-label', $toggle.hasClass( 'is-collapsed' ) ? expandLabel : collapseLabel );
+
+			$toggle.prop( 'disabled', true );
+
+			function finishToggle( collapsed ) {
+				$toggle
+					.toggleClass( 'is-collapsed', collapsed )
+					.attr( 'aria-expanded', collapsed ? 'false' : 'true' )
+					.attr( 'aria-label', collapsed ? expandLabel : collapseLabel )
+					.prop( 'disabled', false );
+			}
+
+			if ( $toggle.hasClass( 'is-collapsed' ) ) {
+				showDirectChildren( $item, function () {
+					finishToggle( false );
+				} );
+			} else {
+				hideDescendants( $item, function () {
+					finishToggle( true );
+				} );
+			}
 		} );
 	}
 
